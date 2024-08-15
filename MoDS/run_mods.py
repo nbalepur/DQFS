@@ -11,7 +11,7 @@ import copy
 import traceback
 
 from dotenv import load_dotenv, find_dotenv
-env_path = '/sensei-fs-3/users/nbalepur/keys.env'
+env_path = ''
 load_dotenv(env_path)
 
 def parse_args():
