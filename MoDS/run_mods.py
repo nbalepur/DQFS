@@ -28,7 +28,7 @@ def parse_args():
     args = parser.parse_args()
     return args
 
-def round_robin_discussion(idx, ds, llm, num_topics, top_k, use_cot_list, use_rationale_list, use_point_for_retrieval, select_agents, num_tries=0, max_tries=5):
+def mods(idx, ds, llm, num_topics, top_k, use_cot_list, use_rationale_list, use_point_for_retrieval, select_agents, num_tries=0, max_tries=5):
     
     try:
         query, docs = ds.get_item(idx)
@@ -74,7 +74,7 @@ def round_robin_discussion(idx, ds, llm, num_topics, top_k, use_cot_list, use_ra
         print("Overall Exception:", excep)
         if num_tries == max_tries - 1:
             return {k: str(excep) for k in zip(use_cot_list, use_rationale_list)}
-        return round_robin_discussion(idx, ds, llm, num_topics, top_k, use_cot_list, use_rationale_list, use_point_for_retrieval, select_agents, num_tries=num_tries+1, max_tries=max_tries)
+        return mods(idx, ds, llm, num_topics, top_k, use_cot_list, use_rationale_list, use_point_for_retrieval, select_agents, num_tries=num_tries+1, max_tries=max_tries)
 
 def save_checkpoint(outputs_dict, out_dict, ds_name, args, USE_POINT_RETRIEVAL, SELECT_AGENTS):
 
@@ -86,7 +86,7 @@ def save_checkpoint(outputs_dict, out_dict, ds_name, args, USE_POINT_RETRIEVAL, 
 
     for k, v in curr_out_dict.items():
         use_cot_, use_rationale_ = k
-        with open(f'{args.res_dir}/{args.run_name}/round_robin_discussion_question_{use_cot_}-CoT_{use_rationale_}-Rationale_{USE_POINT_RETRIEVAL}-PointRetrieval_{SELECT_AGENTS}-Select_TEMP.pkl', 'wb') as handle:
+        with open(f'{args.res_dir}/{args.run_name}/mods_{use_cot_}-CoT_{use_rationale_}-Rationale_{USE_POINT_RETRIEVAL}-PointRetrieval_{SELECT_AGENTS}-Select_TEMP.pkl', 'wb') as handle:
             pickle.dump(v, handle, protocol=pickle.HIGHEST_PROTOCOL)
 
 def main(args):
@@ -106,7 +106,7 @@ def main(args):
         outputs_dict = {(a, b): [] for a,b in zip(USE_COT, USE_RATIONALE)}
 
         for idx in range(0, NUM_TO_RUN if NUM_TO_RUN != 0 else ds.length()):
-            mem_out = round_robin_discussion(idx, ds, llm, NUM_TOPICS, TOP_K, USE_COT, USE_RATIONALE, USE_POINT_RETRIEVAL, SELECT_AGENTS)
+            mem_out = mods(idx, ds, llm, NUM_TOPICS, TOP_K, USE_COT, USE_RATIONALE, USE_POINT_RETRIEVAL, SELECT_AGENTS)
             for k, v in mem_out.items():
                 outputs_dict[k].append(v)
 
@@ -118,7 +118,7 @@ def main(args):
 
     for k, v in out_dict.items():
         use_cot_, use_rationale_ = k
-        with open(f'{args.res_dir}/{args.run_name}/round_robin_discussion_question_{use_cot_}-CoT_{use_rationale_}-Rationale_{USE_POINT_RETRIEVAL}-PointRetrieval_{SELECT_AGENTS}-Select.pkl', 'wb') as handle:
+        with open(f'{args.res_dir}/{args.run_name}/mods_{use_cot_}-CoT_{use_rationale_}-Rationale_{USE_POINT_RETRIEVAL}-PointRetrieval_{SELECT_AGENTS}-Select.pkl', 'wb') as handle:
             pickle.dump(v, handle, protocol=pickle.HIGHEST_PROTOCOL)
 
 if __name__ == "__main__":
