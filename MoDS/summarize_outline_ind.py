@@ -6,7 +6,7 @@ import tqdm
 import traceback
 
 from dotenv import load_dotenv, find_dotenv
-env_path = '/sensei-fs-3/users/nbalepur/keys.env'
+env_path = ''
 load_dotenv(env_path)
 
 
@@ -44,7 +44,7 @@ def main(args):
     USE_POINT_RETRIEVAL = (args.use_subtopic_retrieval == 'True')
     SELECT_AGENTS = (args.select_agents == 'True')
 
-    with open(f'{args.res_dir}/{args.run_name}/round_robin_discussion_question_{use_cot}-CoT_{use_rationale}-Rationale_{USE_POINT_RETRIEVAL}-PointRetrieval_{SELECT_AGENTS}-Select.pkl', 'rb') as handle:
+    with open(f'{args.res_dir}/{args.run_name}/mods_{use_cot}-CoT_{use_rationale}-Rationale_{USE_POINT_RETRIEVAL}-PointRetrieval_{SELECT_AGENTS}-Select.pkl', 'rb') as handle:
         out = pickle.load(handle)
 
     llm = LLM('GPT4', 0.0, 127000)
@@ -56,7 +56,7 @@ def main(args):
         for v_ in tqdm.tqdm(v):
             out_summaries[k].append(summarize_outline(v_, summarizer))
 
-    with open(f'{args.res_dir}/{args.run_name}/round_robin_discussion_question_{use_cot}-CoT_{use_rationale}-Rationale_{USE_POINT_RETRIEVAL}-PointRetrieval_{SELECT_AGENTS}-Select_summary_ind.pkl', 'wb') as handle:
+    with open(f'{args.res_dir}/{args.run_name}/mods_{use_cot}-CoT_{use_rationale}-Rationale_{USE_POINT_RETRIEVAL}-PointRetrieval_{SELECT_AGENTS}-Select_summary_ind.pkl', 'wb') as handle:
         pickle.dump(out_summaries, handle, protocol=pickle.HIGHEST_PROTOCOL)
 
 if __name__ == "__main__":
