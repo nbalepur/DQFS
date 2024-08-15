@@ -45,7 +45,7 @@ def main(args):
     USE_POINT_RETRIEVAL = (args.use_subtopic_retrieval == 'True')
     SELECT_AGENTS = (args.select_agents == 'True')
 
-    with open(f'{args.res_dir}/{args.run_name}/round_robin_discussion_question_{use_cot}-CoT_{use_rationale}-Rationale_{USE_POINT_RETRIEVAL}-PointRetrieval_{SELECT_AGENTS}-Select.pkl', 'rb') as handle:
+    with open(f'{args.res_dir}/{args.run_name}/mods_{use_cot}-CoT_{use_rationale}-Rationale_{USE_POINT_RETRIEVAL}-PointRetrieval_{SELECT_AGENTS}-Select.pkl', 'rb') as handle:
         out = pickle.load(handle)
 
     llm = LLM('GPT4', 0.0, 127000)
@@ -58,7 +58,7 @@ def main(args):
             summ = summarize_outline(v_, summarizer)
             out_summaries[k].append(summ)
 
-    with open(f'{args.res_dir}/{args.run_name}/round_robin_discussion_question_{use_cot}-CoT_{use_rationale}-Rationale_{USE_POINT_RETRIEVAL}-PointRetrieval_{SELECT_AGENTS}-Select_summary_full.pkl', 'wb') as handle:
+    with open(f'{args.res_dir}/{args.run_name}/mods_{use_cot}-CoT_{use_rationale}-Rationale_{USE_POINT_RETRIEVAL}-PointRetrieval_{SELECT_AGENTS}-Select_summary_full.pkl', 'wb') as handle:
         pickle.dump(out_summaries, handle, protocol=pickle.HIGHEST_PROTOCOL)
 
 if __name__ == "__main__":
