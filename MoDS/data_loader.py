@@ -5,8 +5,10 @@ class ConflictDataset():
     """ Initialize the dataset """
     def __init__(self, split, doc_span):
         assert doc_span > 0, "Invalid doc span"
-        
-        self.ds = datasets.load_dataset('nbalepur/doc_conflict_summary_split_combined', token=os.getenv('HF_READ'))[split]
+    
+        with open('ds.pkl', 'rb') as handle:
+            self.ds = pickle.load(handle)
+            
         self.queries = self.ds['query']
         self.docs = self.ds['doc_texts']
 
